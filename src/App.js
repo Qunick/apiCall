@@ -1,22 +1,51 @@
+import {createBrowserRouter,RouterProvider} from 'react-router-dom';
+import Home,{fetch} from './routes/Home';
+import Post, { postLoader } from './routes/Post';
+import About from './routes/About';
+import Root from './routes/Root';
 
-import { useEffect, useState } from 'react';
 import './App.css';
-function App() {
-  const [notifications, setNotifications] = useState(0);
+import NewPost, { submitPost } from './routes/NewPost';
 
-  useEffect(() => {
-    if(notifications> 0)
-  document.title="You have " + notifications + ' notifications'
-  })
-  function sendNotification()
-  {
-    setNotifications(notifications + 1);
-  }
-  return (
-    <div className="App">
-      <button onClick={sendNotification}> send Notification </button>
-    </div>
-  );
+function App()
+{
+    const router = createBrowserRouter([
+        {
+        path:'/',
+        element : <Root/>,
+        children:
+            [
+                {
+path :'/',
+element :<Home/>,
+loader : fetch
+            },
+            {
+                path : '/about',
+                element :<About/>,
+                
+            
+            },
+            {
+                path:"/post/:id",
+                element:<Post />,
+                loader: postLoader,
+            },
+            {
+                path:'/new',
+                element : <NewPost/>,
+                action: submitPost,
+                
+        
+            }
+        ]
+    }])
+
+    
+    return (
+        <>
+   <RouterProvider router = {router}/>
+      </>
+    )
 }
-
 export default App;
